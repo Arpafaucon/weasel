@@ -1,0 +1,12 @@
+*.code-workspace
+*.pyc
+.vscode
+.devcontainer
+.ipynb_checkpoints
+.mypy_cache/
+.gdb_history
+env/
+.coverage
+*junit.xml
+.pytest_cache
+CMakeUserPresets.json

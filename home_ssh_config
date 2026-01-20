@@ -1,0 +1,17 @@
+Host dobby.home
+    Hostname dobby.home
+    User root
+    IdentityFile ~/.ssh/id_home
+    IdentitiesOnly yes
+
+Host *.home
+    ForwardAgent no
+    ForwardX11 no
+    ForwardX11Trusted yes
+    Port 22
+    Protocol 2
+    ServerAliveInterval 60
+    ServerAliveCountMax 3044
+    IdentitiesOnly yes
+    IdentityFile ~/.ssh/id_ed25519
+
