@@ -10,3 +10,4 @@ env/
 *junit.xml
 .pytest_cache
 CMakeUserPresets.json
+.DS_Store
