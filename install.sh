@@ -1,5 +1,6 @@
 #!/bin/bash
 # Installation script for Ubuntu Linux machines
+# to be used with the workspaces CLI
 # Sets up all tools referenced by this dotfiles repo
 
 # Assumptions provided by workspaces
@@ -9,7 +10,7 @@
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR=$HOME/dotfiles
 
 echo "=== Weasel dotfiles installer (Ubuntu) ==="
 
@@ -90,16 +91,6 @@ else
 fi
 
 # -----------------------------------------------
-# 8. Tmux Plugin Manager (tpm)
-# -----------------------------------------------
-if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
-    echo "--- Installing Tmux Plugin Manager ---"
-    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-else
-    echo "--- tpm already installed ---"
-fi
-
-# -----------------------------------------------
 # 9. Stow dotfiles packages
 # -----------------------------------------------
 echo "--- Stowing dotfiles ---"
@@ -109,7 +100,7 @@ STOW_PACKAGES=(base tmux git)
 
 for pkg in "${STOW_PACKAGES[@]}"; do
     echo "  stowing: $pkg"
-    stow -t "$HOME" -v --restow -d "$SCRIPT_DIR/stow" "$pkg"
+    stow -t "$HOME" -v -d "$SCRIPT_DIR/stow" "$pkg"
 done
 
 echo ""
@@ -117,7 +108,7 @@ echo "--- Optional stow packages (not auto-applied) ---"
 echo "  datadog  - Datadog workspace config (stow -t \$HOME -v -d $SCRIPT_DIR/stow datadog)"
 echo "  local_rc - Machine-specific shell overrides (stow -t \$HOME -v -d $SCRIPT_DIR/stow local_rc)"
 
-if ! grep WEASEL_SOURCE $HOME/.zshrc
+if ! grep WEASEL_SOURCE "$HOME/.zshrc"
 then
     echo "Setting up Weasel sourcing"
     cat <<EOF >> "$HOME/.zshrc"
@@ -131,12 +122,32 @@ EOF
 fi
 
 # -----------------------------------------------
-# 11. Install tmux plugins
+# 8. Tmux
 # -----------------------------------------------
+
+if ! grep WEASEL_SOURCE "$HOME/.tmux.conf"
+then
+    echo "Setting up tmux conf"
+    cat <<EOF >> "$HOME/.tmux.conf"
+# WEASEL_SOURCE
+# Sourcing the stowed dotfiles
+source-file ~/.tmux/tmux_global.conf
+source-file ~/.tmux/tmux_remote.conf
+EOF
+fi
+
+if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+    echo "--- Installing Tmux Plugin Manager ---"
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+else
+    echo "--- tpm already installed ---"
+fi
+
 echo "--- Installing tmux plugins via tpm ---"
 if [ -x "$HOME/.tmux/plugins/tpm/bin/install_plugins" ]; then
     "$HOME/.tmux/plugins/tpm/bin/install_plugins"
 fi
+
 
 echo ""
 echo "=== Installation complete ==="
