@@ -1,6 +1,12 @@
 #!/bin/bash
 # Installation script for Ubuntu Linux machines
 # Sets up all tools referenced by this dotfiles repo
+
+# Assumptions provided by workspaces
+# tmux,wget,git already installed
+# ZSH is default shell (set in config.yaml)
+
+
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -13,23 +19,23 @@ echo "=== Weasel dotfiles installer (Ubuntu) ==="
 echo "--- Installing system packages via apt ---"
 sudo apt-get update
 sudo apt-get install -y \
-    tmux \
     curl \
     wget \
     stow \
     build-essential
 
-# -----------------------------------------------
-# 2. Neovim (latest stable PPA)
-# -----------------------------------------------
-if ! command -v nvim &>/dev/null; then
-    echo "--- Installing Neovim ---"
-    sudo add-apt-repository -y ppa:neovim-ppa/stable
-    sudo apt-get update
-    sudo apt-get install -y neovim
-else
-    echo "--- Neovim already installed ---"
-fi
+# skipped for now
+# # -----------------------------------------------
+# # 2. Neovim (latest stable PPA)
+# # -----------------------------------------------
+# if ! command -v nvim &>/dev/null; then
+#     echo "--- Installing Neovim ---"
+#     sudo add-apt-repository -y ppa:neovim-ppa/stable
+#     sudo apt-get update
+#     sudo apt-get install -y neovim
+# else
+#     echo "--- Neovim already installed ---"
+# fi
 
 # -----------------------------------------------
 # 3. Rust toolchain
@@ -97,7 +103,6 @@ fi
 # 9. Stow dotfiles packages
 # -----------------------------------------------
 echo "--- Stowing dotfiles ---"
-mkdir -p ~/.local/bin
 
 # Packages safe to stow on any machine
 STOW_PACKAGES=(base tmux git)
@@ -112,14 +117,17 @@ echo "--- Optional stow packages (not auto-applied) ---"
 echo "  datadog  - Datadog workspace config (stow -t \$HOME -v -d $SCRIPT_DIR/stow datadog)"
 echo "  local_rc - Machine-specific shell overrides (stow -t \$HOME -v -d $SCRIPT_DIR/stow local_rc)"
 
-# -----------------------------------------------
-# 10. Set zsh as default shell
-# -----------------------------------------------
-if [ "$SHELL" != "$(which zsh)" ]; then
-    echo "--- Setting zsh as default shell ---"
-    chsh -s "$(which zsh)"
-else
-    echo "--- zsh is already the default shell ---"
+if ! grep WEASEL_SOURCE $HOME/.zshrc
+then
+    echo "Setting up Weasel sourcing"
+    cat <<EOF >> "$HOME/.zshrc"
+# WEASEL_SOURCE
+# Sourcing the stowed dotfiles
+for f in "$HOME"/.weasel_rc/*.sh
+do
+  source "$f"
+done
+EOF
 fi
 
 # -----------------------------------------------
