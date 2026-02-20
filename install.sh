@@ -1,89 +1,67 @@
 #!/bin/bash
 # Installation script for Ubuntu Linux machines
-# to be used with the workspaces CLI
-# Sets up all tools referenced by this dotfiles repo
+# automatically called by the workspaces CLI
 
-# Assumptions provided by workspaces
-# tmux,wget,git already installed
-# ZSH is default shell (set in config.yaml)
+# Assumptions:
+# - tmux,wget,git already installed
+# - ZSH is default shell (set in config.yaml)
 
+# TODO
+# - git aliases
+# - neovim
 
 set -euo pipefail
 
 SCRIPT_DIR=$HOME/dotfiles
 
-echo "=== Weasel dotfiles installer (Ubuntu) ==="
+echo "=== Weasel dotfiles installer ==="
 
 # -----------------------------------------------
-# 1. System packages (apt)
+# System config
 # -----------------------------------------------
-echo "--- Installing system packages via apt ---"
+echo "--- Installing system packages ---"
 sudo apt-get update
 sudo apt-get install -y \
-    curl \
-    wget \
     stow \
-    build-essential \
     fzf
 
 sudo locale-gen en_IE.UTF-8
 
-# skipped for now
-# # -----------------------------------------------
-# # 2. Neovim (latest stable PPA)
-# # -----------------------------------------------
-# if ! command -v nvim &>/dev/null; then
-#     echo "--- Installing Neovim ---"
-#     sudo add-apt-repository -y ppa:neovim-ppa/stable
-#     sudo apt-get update
-#     sudo apt-get install -y neovim
-# else
-#     echo "--- Neovim already installed ---"
-# fi
-
 # -----------------------------------------------
-# 3. Rust toolchain
+# Rust toolchain
 # -----------------------------------------------
 if ! command -v cargo &>/dev/null; then
     echo "--- Installing Rust toolchain ---"
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-else
-    echo "--- Rust toolchain already installed ---"
 fi
 source "$HOME/.cargo/env" # for later steps
 
 # -----------------------------------------------
-# 5. zoxide (smarter cd)
+#  zoxide (smarter cd)
 # -----------------------------------------------
 if ! command -v zoxide &>/dev/null; then
     echo "--- Installing zoxide ---"
     cargo install zoxide --locked
-else
-    echo "--- zoxide already installed ---"
 fi
 
 # -----------------------------------------------
-# 6. mise (version manager, asdf alternative)
+#  mise (version manager, asdf alternative)
 # -----------------------------------------------
 if ! command -v mise &>/dev/null; then
     echo "--- Installing mise ---"
     curl https://mise.run | sh
-else
-    echo "--- mise already installed ---"
 fi
 
 # -----------------------------------------------
-# 7. Powerlevel10k (zsh theme)
+#  Powerlevel10k (zsh theme)
 # -----------------------------------------------
 if [[ ! -d "$HOME/powerlevel10k" ]]; then
     echo "--- Installing Powerlevel10k ---"
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
-else
-    echo "--- Powerlevel10k already installed ---"
 fi
 
 # -----------------------------------------------
-# 9. Stow dotfiles packages
+#  Stow dotfiles packages
 # -----------------------------------------------
 echo "--- Stowing dotfiles ---"
 
@@ -95,12 +73,7 @@ for pkg in "${STOW_PACKAGES[@]}"; do
     stow -t "$HOME" -v -d "$SCRIPT_DIR/stow" "$pkg"
 done
 
-echo ""
-echo "--- Optional stow packages (not auto-applied) ---"
-echo "  datadog  - Datadog workspace config (stow -t \$HOME -v -d $SCRIPT_DIR/stow datadog)"
-echo "  local_rc - Machine-specific shell overrides (stow -t \$HOME -v -d $SCRIPT_DIR/stow local_rc)"
-
-if ! grep WEASEL_SOURCE "$HOME/.zshrc"
+if ! grep --silent WEASEL_SOURCE "$HOME/.zshrc"
 then
     echo "Setting up ZSH weasel sourcing"
     cat <<EOF >> "$HOME/.zshrc"
@@ -117,10 +90,10 @@ EOF
 fi
 
 # -----------------------------------------------
-# 8. Tmux
+#  Tmux
 # -----------------------------------------------
 
-if ! grep WEASEL_SOURCE "$HOME/.tmux.conf"
+if ! grep --silent WEASEL_SOURCE "$HOME/.tmux.conf"
 then
     echo "Setting up tmux weasel sourcing"
     cat <<EOF >> "$HOME/.tmux.conf"
@@ -134,8 +107,6 @@ fi
 if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
     echo "--- Installing Tmux Plugin Manager ---"
     git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-else
-    echo "--- tpm already installed ---"
 fi
 
 echo "--- Installing tmux plugins via tpm ---"
