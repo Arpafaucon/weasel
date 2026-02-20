@@ -13,17 +13,10 @@ echo "=== Weasel dotfiles installer (Ubuntu) ==="
 echo "--- Installing system packages via apt ---"
 sudo apt-get update
 sudo apt-get install -y \
-    zsh \
     tmux \
-    git \
     curl \
     wget \
-    unzip \
     stow \
-    direnv \
-    graphviz \
-    hexdump \
-    jq \
     build-essential
 
 # -----------------------------------------------
