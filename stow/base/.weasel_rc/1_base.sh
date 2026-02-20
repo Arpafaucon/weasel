@@ -8,8 +8,6 @@ export LC_ALL=en_IE.UTF-8
 
 autoload -Uz compinit && compinit
 
-eval "$(dd-gitsign load-key)"
-
 #compdef gt
 ###-begin-gt-completions-###
 #

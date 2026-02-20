@@ -25,6 +25,8 @@ sudo apt-get install -y \
     stow \
     build-essential
 
+sudo locale-gen en_IE.UTF-8
+
 # skipped for now
 # # -----------------------------------------------
 # # 2. Neovim (latest stable PPA)
@@ -44,7 +46,6 @@ sudo apt-get install -y \
 if ! command -v cargo &>/dev/null; then
     echo "--- Installing Rust toolchain ---"
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-    source "$HOME/.cargo/env"
 else
     echo "--- Rust toolchain already installed ---"
 fi
@@ -83,7 +84,7 @@ fi
 # -----------------------------------------------
 # 7. Powerlevel10k (zsh theme)
 # -----------------------------------------------
-if [ ! -d "$HOME/powerlevel10k" ]; then
+if [[ ! -d "$HOME/powerlevel10k" ]]; then
     echo "--- Installing Powerlevel10k ---"
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
 else
@@ -110,14 +111,12 @@ echo "  local_rc - Machine-specific shell overrides (stow -t \$HOME -v -d $SCRIP
 
 if ! grep WEASEL_SOURCE "$HOME/.zshrc"
 then
-    echo "Setting up Weasel sourcing"
+    echo "Setting up ZSH weasel sourcing"
     cat <<EOF >> "$HOME/.zshrc"
 # WEASEL_SOURCE
+source "$HOME/.cargo/env"
 # Sourcing the stowed dotfiles
-for f in "$HOME"/.weasel_rc/*.sh
-do
-  source "$f"
-done
+source '$HOME/.weasel_rc/1_base.sh'
 EOF
 fi
 
@@ -127,7 +126,7 @@ fi
 
 if ! grep WEASEL_SOURCE "$HOME/.tmux.conf"
 then
-    echo "Setting up tmux conf"
+    echo "Setting up tmux weasel sourcing"
     cat <<EOF >> "$HOME/.tmux.conf"
 # WEASEL_SOURCE
 # Sourcing the stowed dotfiles

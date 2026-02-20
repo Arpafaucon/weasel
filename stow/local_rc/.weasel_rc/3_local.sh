@@ -1,5 +1,7 @@
 #!/bin/bash
 
+eval "$(dd-gitsign load-key)"
+
 complete -o nospace -C /Users/gregoire.roussel/.config/tfenv/versions/1.11.1/terraform terraform
 
 # based on bin/submit_to_cluster
