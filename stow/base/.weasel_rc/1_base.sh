@@ -6,6 +6,8 @@
 # "bash: warning: setlocale: LC_ALL: cannot change locale (en_FR-u-hc-h23-u-ca-gregory-u-nu-latn): Invalid argument"
 export LC_ALL=en_IE.UTF-8
 
+autoload -Uz compinit && compinit
+
 eval "$(dd-gitsign load-key)"
 
 #compdef gt
@@ -39,9 +41,3 @@ autoload -U +X bashcompinit && bashcompinit
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 export FZF_DEFAULT_OPTS="--tmux"
 export FZF_CTRL_T_OPTS="--preview-window 'right:60%' --preview 'bat --color=always --style=header,grid --line-range :300 {}'"
-
-
-if [[ $(hostname||true) == "COMP-CF9QJYPYXL" ]]
-then
-  source "$WEASEL_RC/local.sh"
-fi

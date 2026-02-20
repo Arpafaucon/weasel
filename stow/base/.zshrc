@@ -75,11 +75,11 @@ export SCFW_DD_LOG_LEVEL="ALLOW"
 export SCFW_HOME="/Users/gregoire.roussel/.scfw"
 # END SCFW MANAGED BLOCK
 
-autoload -Uz compinit && compinit
-
 # User configuration
 for f in "$HOME"/.weasel_rc/*.sh
 do
+  # shellcheck source=.weasel_rc/1_base.sh
+  # shellcheck source=SCRIPTDIR/../local_rc/.weasel_rc/3_local.sh
   source "$f"
 done
 

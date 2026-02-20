@@ -1,6 +1,6 @@
 *.code-workspace
 *.pyc
-.vscode
+.vscode/
 .devcontainer
 .ipynb_checkpoints
 .mypy_cache/
