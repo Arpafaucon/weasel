@@ -78,8 +78,10 @@ export SCFW_HOME="/Users/gregoire.roussel/.scfw"
 autoload -Uz compinit && compinit
 
 # User configuration
-WEASEL_RC="$HOME/dev/weasel/rc"
-source "$WEASEL_RC/base_z.sh"
+for f in "$HOME"/.weasel_rc/*.sh
+do
+  source "$f"
+done
 
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 

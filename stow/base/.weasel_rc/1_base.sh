@@ -28,3 +28,20 @@ _gt_yargs_completions()
 compdef _gt_yargs_completions gt
 ###-end-gt-completions-###
 
+eval "$(zoxide init zsh)"
+eval "$(mise activate zsh)"
+
+
+autoload -U +X bashcompinit && bashcompinit
+
+# fzf config
+# Using bat as previewer
+[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
+export FZF_DEFAULT_OPTS="--tmux"
+export FZF_CTRL_T_OPTS="--preview-window 'right:60%' --preview 'bat --color=always --style=header,grid --line-range :300 {}'"
+
+
+if [[ $(hostname||true) == "COMP-CF9QJYPYXL" ]]
+then
+  source "$WEASEL_RC/local.sh"
+fi
