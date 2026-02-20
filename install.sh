@@ -23,7 +23,8 @@ sudo apt-get install -y \
     curl \
     wget \
     stow \
-    build-essential
+    build-essential \
+    fzf
 
 sudo locale-gen en_IE.UTF-8
 
@@ -50,17 +51,6 @@ else
     echo "--- Rust toolchain already installed ---"
 fi
 source "$HOME/.cargo/env" # for later steps
-
-# -----------------------------------------------
-# 4. fzf (fuzzy finder)
-# -----------------------------------------------
-if ! command -v fzf &>/dev/null; then
-    echo "--- Installing fzf ---"
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    ~/.fzf/install --all --no-bash --no-fish
-else
-    echo "--- fzf already installed ---"
-fi
 
 # -----------------------------------------------
 # 5. zoxide (smarter cd)
@@ -116,6 +106,8 @@ then
     cat <<EOF >> "$HOME/.zshrc"
 # WEASEL_SOURCE
 source "$HOME/.cargo/env"
+# Set up fzf key bindings and fuzzy completion
+source <(fzf --zsh)
 # Sourcing the stowed dotfiles
 source "$HOME/.weasel_rc/1_base.sh"
 # p10k
