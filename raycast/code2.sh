@@ -1,0 +1,1 @@
+/Users/gregoire.roussel/dev/weasel/raycast-code/raycast-wrapper.sh

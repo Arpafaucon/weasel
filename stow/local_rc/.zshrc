@@ -75,15 +75,17 @@ export SCFW_DD_LOG_LEVEL="ALLOW"
 export SCFW_HOME="/Users/gregoire.roussel/.scfw"
 # END SCFW MANAGED BLOCK
 
-[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
-autoload -Uz compinit && compinit
-
 # User configuration
-WEASEL_RC="$HOME/dev/weasel/rc"
-source "$WEASEL_RC/base_z.sh"
+for f in "$HOME"/.weasel_rc/*.sh
+do
+  # shellcheck source=.weasel_rc/1_base.sh
+  # shellcheck source=SCRIPTDIR/../local_rc/.weasel_rc/3_local.sh
+  source "$f"
+done
 
-source ~/powerlevel10k/powerlevel10k.zsh-theme
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+source ~/.p10k.zsh
+source "$HOME/powerlevel10k/powerlevel10k.zsh-theme"
+
 
