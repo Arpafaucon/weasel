@@ -75,7 +75,6 @@ export SCFW_DD_LOG_LEVEL="ALLOW"
 export SCFW_HOME="/Users/gregoire.roussel/.scfw"
 # END SCFW MANAGED BLOCK
 
-[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 autoload -Uz compinit && compinit
 
 # User configuration
@@ -86,4 +85,5 @@ source ~/powerlevel10k/powerlevel10k.zsh-theme
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
 

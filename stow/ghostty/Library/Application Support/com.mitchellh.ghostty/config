@@ -8,3 +8,4 @@
 font-family = Fira Monos
 confirm-close-surface=false
 window-decoration=false
+keybind=ctrl+s=write_scrollback_file:open
