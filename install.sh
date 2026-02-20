@@ -49,6 +49,7 @@ if ! command -v cargo &>/dev/null; then
 else
     echo "--- Rust toolchain already installed ---"
 fi
+source "$HOME/.cargo/env" # for later steps
 
 # -----------------------------------------------
 # 4. fzf (fuzzy finder)
@@ -97,7 +98,7 @@ fi
 echo "--- Stowing dotfiles ---"
 
 # Packages safe to stow on any machine
-STOW_PACKAGES=(base tmux git)
+STOW_PACKAGES=(base tmux)
 
 for pkg in "${STOW_PACKAGES[@]}"; do
     echo "  stowing: $pkg"
@@ -116,7 +117,10 @@ then
 # WEASEL_SOURCE
 source "$HOME/.cargo/env"
 # Sourcing the stowed dotfiles
-source '$HOME/.weasel_rc/1_base.sh'
+source "$HOME/.weasel_rc/1_base.sh"
+# p10k
+source "$HOME/.p10k.zsh"
+source "$HOME/powerlevel10k/powerlevel10k.zsh-theme"
 EOF
 fi
 
@@ -135,7 +139,7 @@ source-file ~/.tmux/tmux_remote.conf
 EOF
 fi
 
-if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
     echo "--- Installing Tmux Plugin Manager ---"
     git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 else
@@ -143,21 +147,11 @@ else
 fi
 
 echo "--- Installing tmux plugins via tpm ---"
-if [ -x "$HOME/.tmux/plugins/tpm/bin/install_plugins" ]; then
+if [[ -x "$HOME/.tmux/plugins/tpm/bin/install_plugins" ]]; then
     "$HOME/.tmux/plugins/tpm/bin/install_plugins"
 fi
 
 
 echo ""
 echo "=== Installation complete ==="
-echo ""
-echo "Notes:"
-echo "  - The .zshrc contains some macOS/Homebrew-specific paths (pyenv, rbenv, brew)."
-echo "    These will be harmless on Linux (the evals just won't find the commands),"
-echo "    but you may want to install pyenv/rbenv via mise instead."
-echo "  - Datadog-specific tools (dd-gitsign, scfw, devtools) are not installed by"
-echo "    this script. Set those up according to Datadog internal documentation."
-echo "  - The .gitconfig references macOS-specific paths (hooksPath, maintenance repo)."
-echo "    Update these if needed for your Linux environment."
-echo "  - Restart your shell or run 'exec zsh' to activate the new configuration."
-echo "  - In tmux, press prefix + I to install tmux plugins if they didn't auto-install."
+
