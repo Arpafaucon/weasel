@@ -20,6 +20,7 @@ _gt_yargs_completions()
 {
   local reply
   local si=$IFS
+  # shellcheck disable=SC2207,SC2034,SC2154
   IFS=$'
 ' reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" gt --get-yargs-completions "${words[@]}"))
   IFS=$si
@@ -36,6 +37,7 @@ autoload -U +X bashcompinit && bashcompinit
 
 # fzf config
 # Using bat as previewer
+# shellcheck disable=SC1090
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 export FZF_DEFAULT_OPTS="--tmux" # only available on recent tmux versions
 export FZF_CTRL_T_OPTS="--preview-window 'right:60%' --preview 'bat --color=always --style=header,grid --line-range :300 {}'"
