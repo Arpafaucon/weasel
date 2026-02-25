@@ -10,7 +10,7 @@
 # - git aliases
 # - neovim
 
-set -euo pipefail
+set -xeuo pipefail
 
 SCRIPT_DIR=$HOME/dotfiles
 
@@ -22,10 +22,19 @@ echo "=== Weasel dotfiles installer ==="
 echo "--- Installing system packages ---"
 sudo apt-get update
 sudo apt-get install -y \
-    stow \
-    fzf
+    stow
 
 sudo locale-gen en_IE.UTF-8
+
+# -----------------------------------------------
+# mise
+# -----------------------------------------------
+if ! command -v mise &>/dev/null
+then
+    curl https://mise.run | sh
+
+fi
+mise use fzf
 
 # -----------------------------------------------
 # Rust toolchain
@@ -36,8 +45,9 @@ if ! command -v cargo &>/dev/null; then
 fi
 source "$HOME/.cargo/env" # for later steps
 
+
 # -----------------------------------------------
-#  zoxide (smarter cd)
+#  zoxide
 # -----------------------------------------------
 if ! command -v zoxide &>/dev/null; then
     echo "--- Installing zoxide ---"
@@ -47,7 +57,7 @@ fi
 # -----------------------------------------------
 #  Ghostty terminfo
 # -----------------------------------------------
-tic -x xterm-ghostty-infocmp
+tic -x "$SCRIPT_DIR/xterm-ghostty-infocmp"
 
 # -----------------------------------------------
 #  Stow dotfiles packages
