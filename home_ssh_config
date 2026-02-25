@@ -1,6 +1,12 @@
 Host dobby.home
-    Hostname dobby.home
+    Hostname 192.168.1.22
     User root
+    IdentityFile ~/.ssh/id_home
+    IdentitiesOnly yes
+
+Host kreacher.home
+    Hostname 192.168.1.24
+    User greg
     IdentityFile ~/.ssh/id_home
     IdentitiesOnly yes
 
@@ -12,6 +18,4 @@ Host *.home
     Protocol 2
     ServerAliveInterval 60
     ServerAliveCountMax 3044
-    IdentitiesOnly yes
-    IdentityFile ~/.ssh/id_ed25519
 
