@@ -45,20 +45,9 @@ if ! command -v zoxide &>/dev/null; then
 fi
 
 # -----------------------------------------------
-#  mise (version manager, asdf alternative)
+#  Ghostty terminfo
 # -----------------------------------------------
-if ! command -v mise &>/dev/null; then
-    echo "--- Installing mise ---"
-    curl https://mise.run | sh
-fi
-
-# -----------------------------------------------
-#  Powerlevel10k (zsh theme)
-# -----------------------------------------------
-if [[ ! -d "$HOME/powerlevel10k" ]]; then
-    echo "--- Installing Powerlevel10k ---"
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
-fi
+tic -x xterm-ghostty-infocmp
 
 # -----------------------------------------------
 #  Stow dotfiles packages
@@ -79,13 +68,8 @@ then
     cat <<EOF >> "$HOME/.zshrc"
 # WEASEL_SOURCE
 source "$HOME/.cargo/env"
-# Set up fzf key bindings and fuzzy completion
-source <(fzf --zsh)
 # Sourcing the stowed dotfiles
 source "$HOME/.weasel_rc/1_base.sh"
-# p10k
-source "$HOME/.p10k.zsh"
-source "$HOME/powerlevel10k/powerlevel10k.zsh-theme"
 EOF
 fi
 
