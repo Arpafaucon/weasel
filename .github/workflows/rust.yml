@@ -3,8 +3,6 @@ name: Rust
 on:
   push:
     branches: [main]
-    paths:
-      - 'raycast-code/**'
   pull_request:
     branches: [main]
     paths:
