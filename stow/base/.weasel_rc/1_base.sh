@@ -37,5 +37,5 @@ autoload -U +X bashcompinit && bashcompinit
 # fzf config
 # Using bat as previewer
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
-export FZF_DEFAULT_OPTS="--tmux"
+export FZF_DEFAULT_OPTS="--tmux" # only available on recent tmux versions
 export FZF_CTRL_T_OPTS="--preview-window 'right:60%' --preview 'bat --color=always --style=header,grid --line-range :300 {}'"

@@ -10,7 +10,7 @@
 # - git aliases
 # - neovim
 
-set -euo pipefail
+set -xeuo pipefail
 
 SCRIPT_DIR=$HOME/dotfiles
 
@@ -22,10 +22,19 @@ echo "=== Weasel dotfiles installer ==="
 echo "--- Installing system packages ---"
 sudo apt-get update
 sudo apt-get install -y \
-    stow \
-    fzf
+    stow
 
 sudo locale-gen en_IE.UTF-8
+
+# -----------------------------------------------
+# mise
+# -----------------------------------------------
+if ! command -v mise &>/dev/null
+then
+    curl https://mise.run | sh
+
+fi
+mise use fzf
 
 # -----------------------------------------------
 # Rust toolchain
@@ -36,8 +45,9 @@ if ! command -v cargo &>/dev/null; then
 fi
 source "$HOME/.cargo/env" # for later steps
 
+
 # -----------------------------------------------
-#  zoxide (smarter cd)
+#  zoxide
 # -----------------------------------------------
 if ! command -v zoxide &>/dev/null; then
     echo "--- Installing zoxide ---"
@@ -45,20 +55,9 @@ if ! command -v zoxide &>/dev/null; then
 fi
 
 # -----------------------------------------------
-#  mise (version manager, asdf alternative)
+#  Ghostty terminfo
 # -----------------------------------------------
-if ! command -v mise &>/dev/null; then
-    echo "--- Installing mise ---"
-    curl https://mise.run | sh
-fi
-
-# -----------------------------------------------
-#  Powerlevel10k (zsh theme)
-# -----------------------------------------------
-if [[ ! -d "$HOME/powerlevel10k" ]]; then
-    echo "--- Installing Powerlevel10k ---"
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
-fi
+tic -x "$SCRIPT_DIR/xterm-ghostty-infocmp"
 
 # -----------------------------------------------
 #  Stow dotfiles packages
@@ -79,13 +78,8 @@ then
     cat <<EOF >> "$HOME/.zshrc"
 # WEASEL_SOURCE
 source "$HOME/.cargo/env"
-# Set up fzf key bindings and fuzzy completion
-source <(fzf --zsh)
 # Sourcing the stowed dotfiles
 source "$HOME/.weasel_rc/1_base.sh"
-# p10k
-source "$HOME/.p10k.zsh"
-source "$HOME/powerlevel10k/powerlevel10k.zsh-theme"
 EOF
 fi
 
