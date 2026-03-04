@@ -9,3 +9,6 @@ brew install stow
 brew install graphviz # some schemas
 
 cargo install eza
+
+# insert local SSH config link
+# Include ~/dev/weasel/home_ssh_config

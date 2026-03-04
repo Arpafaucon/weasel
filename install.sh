@@ -32,9 +32,17 @@ sudo locale-gen en_IE.UTF-8
 if ! command -v mise &>/dev/null
 then
     curl https://mise.run | sh
-
 fi
-mise use fzf
+{
+    pushd "$HOME/.config"
+    mise use --path "$HOME/.config/mise.toml" \
+        fzf@0.70.0 \
+        aqua:sharkdp/bat@0.26.1 \
+        btop@1.4.6
+    mise lock
+    popd
+}
+
 
 # -----------------------------------------------
 # Rust toolchain
@@ -66,18 +74,20 @@ tic -x "$SCRIPT_DIR/xterm-ghostty-infocmp"
 echo "--- Stowing dotfiles ---"
 
 # Packages safe to stow on any machine
+# --no-folding because we'll be adding a lot more stuff in the .tmux directory
 STOW_PACKAGES=(base tmux)
 
 for pkg in "${STOW_PACKAGES[@]}"; do
     echo "  stowing: $pkg"
-    stow -t "$HOME" -v -d "$SCRIPT_DIR/stow" "$pkg"
+    stow -t "$HOME" -v -d "$SCRIPT_DIR/stow" --no-folding "$pkg"
 done
 
-if ! grep --silent WEASEL_SOURCE "$HOME/.zshrc"
+if ! grep --silent WEASEL_SOURCE_STOW"$HOME/.zshrc"
 then
     echo "Setting up ZSH weasel sourcing"
     cat <<EOF >> "$HOME/.zshrc"
-# WEASEL_SOURCE
+# WEASEL_SOURCE_STOW
+source <(fzf --zsh)
 source "$HOME/.cargo/env"
 # Sourcing the stowed dotfiles
 source "$HOME/.weasel_rc/1_base.sh"
@@ -88,11 +98,11 @@ fi
 #  Tmux
 # -----------------------------------------------
 
-if ! grep --silent WEASEL_SOURCE "$HOME/.tmux.conf"
+if ! grep --silent WEASEL_SOURCE_TMUX "$HOME/.tmux.conf"
 then
     echo "Setting up tmux weasel sourcing"
     cat <<EOF >> "$HOME/.tmux.conf"
-# WEASEL_SOURCE
+# WEASEL_SOURCE_TMUX
 # Sourcing the stowed dotfiles
 source-file ~/.tmux/tmux_global.conf
 source-file ~/.tmux/tmux_remote.conf
